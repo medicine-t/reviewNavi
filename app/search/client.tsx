@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { Shop } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
  
 async function fetchShops(keyword?: string): Promise<Shop[]> {
@@ -51,25 +51,32 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
         </Button>
       </form>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full"> 
-        {shops.length > 0 ? (
-          shops.map((shop) => (
-            <Card key={shop.id}> 
-              <CardHeader className="space-y-4 p-6">
-                <Avatar className="w-12 h-12">
-                  <AvatarImage src={shop.photo.pc.m} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <CardTitle>{shop.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{shop.address || "住所情報なし"}</p>
-                <p>{shop.genre?.name || "ジャンル情報なし"}</p>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <p>店舗が見つかりません</p>
-        )}
+      {shops.length > 0 ? (
+        shops.map((shop) => (
+          <Card key={shop.id}> 
+            <CardHeader className="space-y-2 p-4">
+              <Avatar className="w-full h-48">
+                <AvatarImage src={shop.photo.pc.m} />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <CardTitle className="text-lg">{shop.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <p>{shop.mobile_access || "アクセス情報なし"}</p>
+              <div className="flex space-x-2">
+                <span >駐車場:{shop.parking}</span>
+                <span className={`text-red-500 ${shop.card ? "" : "hidden"}`}>カードok</span>
+                <span className={`text-red-500 ${shop.non_smoking ? "" : "hidden"}`}>一部禁煙</span>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <p>定休日: {shop.close}</p>
+            </CardFooter>
+          </Card>
+        ))
+      ) : (
+        <p>店舗が見つかりません</p>
+      )}
       </div>
     </div>
   );

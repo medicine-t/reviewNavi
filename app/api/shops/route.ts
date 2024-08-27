@@ -37,6 +37,7 @@ export async function GET(request: Request) {
  
     const query = new URLSearchParams({
       key,
+      count:"15",
       format: "json",
       large_area: searchParams.get("large_area") || "Z098",
     });
