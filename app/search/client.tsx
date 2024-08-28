@@ -46,7 +46,7 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
       setKeyword(keywordParam || "");
       setPartyCapacity(partyCapacityParam || "");
       setBudget(budgetParam || "");
-      setaddress(addressParam || "");
+      //setaddress(addressParam || "");
       fetchShops(keywordParam || "", partyCapacityParam || "", budgetParam || "").then(data => setShops(data));
     }
   }, []);

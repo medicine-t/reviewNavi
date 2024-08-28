@@ -45,7 +45,6 @@ export async function GET(request: Request) {
     const keyword = searchParams.get("keyword");
     const party_capacity = searchParams.get("party_capacity");
     const budget = searchParams.get("budget");
-    const address = address
 
     if (keyword) query.set("keyword", keyword);
     if (party_capacity) query.set("party_capacity", party_capacity);
