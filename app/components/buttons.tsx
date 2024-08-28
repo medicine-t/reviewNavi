@@ -1,27 +1,14 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { signIn, signOut } from "next-auth/react";
 
 // ログインボタン
 export const LoginButton = () => {
-  return (
-    <button
-      className="bg-gray-700 text-gray-100 p-2 rounded-md"
-      onClick={() => signIn()}
-    >
-      Sign in
-    </button>
-  );
+  return <Button onClick={() => signIn()}>ログイン</Button>;
 };
 
 // ログアウトボタン
 export const LogoutButton = () => {
-  return (
-    <button
-      className="bg-gray-700 text-gray-100 p-2 rounded-md"
-      onClick={() => signOut()}
-    >
-      Sign Out
-    </button>
-  );
+  return <Button onClick={() => signOut()}>ログアウト</Button>;
 };
