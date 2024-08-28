@@ -1,73 +1,90 @@
-import { Shop } from "@/types";
+"use client";
+
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { FormEvent } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
- 
- 
-async function fetchShops(keyword?: string): Promise<Shop[]> {
-  const query = new URLSearchParams();
-  if (keyword) query.set("keyword", keyword);
- 
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/shops?${query.toString()}`);
-    if (!res.ok) {
-      console.error(`Failed to fetch shops: ${res.status} ${res.statusText}`);
-      return [];
+import { useRouter } from "next/navigation"; 
+
+export default function GourmetsSearch() {
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const router = useRouter(); 
+
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const keyword = formData.get("keyword")?.toString().trim();
+    const people = formData.get("people")?.toString().trim();
+    const budget = formData.get("budget")?.toString().trim();
+    const location = formData.get("location")?.toString().trim();
+
+    const queryParams = new URLSearchParams();
+
+    if (keyword) queryParams.append("keyword", keyword);
+    if (people) queryParams.append("people", people);
+    if (budget) queryParams.append("budget", budget);
+    if (location) queryParams.append("location", location);
+
+    if (keyword || people || budget || location) {
+      setSearchKeyword(keyword || "");
+      router.push(`/search?${queryParams.toString()}`); 
+    } else {
+      setSearchKeyword("");
     }
-    return await res.json();
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error("Fetch error:", errorMessage);
-    return [];
-  }
-}
- 
- 
-export default async function GourmetsPage({
-  searchParams,
-}: {
-  searchParams: { keyword?: string };
-}) {
-  const shops = await fetchShops(searchParams.keyword);
- 
+  };
+
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <form className="flex items-center space-x-4 mb-8">
-        <Input
-          type="search"
-          name="keyword"
-          placeholder="検索..."
-          defaultValue={searchParams.keyword || ""}
-          className="max-w-sm w-full"
-        />
-        <Button type="submit">検索</Button>
+      <form onSubmit={handleSearchSubmit} className="flex flex-col items-center space-y-4 mb-8">
+        <div className="flex items-center space-x-4">
+          <Button type="button">ブックマーク</Button>
+          <Input
+            type="search"
+            name="keyword"
+            placeholder="検索..."
+            className="max-w-sm w-full"
+          />
+          <Button type="submit">検索</Button>
+        </div>
+        <div className="flex items-center space-x-4">
+          <Input
+            type="text"
+            name="people"
+            placeholder="人数"
+            className="max-w-xs w-20"
+          />
+          <select
+            name="budget"
+            className="max-w-xs w-20 border border-gray-300 rounded-md p-2"
+          >
+            <option value="B009">~500円</option>
+            <option value="B010">501～1000円</option>
+            <option value="B011">1001～1500円</option>
+            <option value="B001">1501～2000円</option>
+            <option value="B002">2001～3000円</option>
+            <option value="B003">3001～4000円</option>
+            <option value="B008">4001～5000円</option>
+            <option value="B004">5001～7000円</option>
+            <option value="B005">7001～10000円</option>
+            <option value="B006">10001～15000円</option>
+            <option value="B012">15001～20000円</option>
+            <option value="B013">20001～30000円</option>
+            <option value="B014">30001円～</option>
+
+          </select>
+          <Input
+            type="text"
+            name="location"
+            placeholder="場所"
+            className="max-w-xs w-20"
+          />
+        </div>
       </form>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full"> 
-        {shops.length > 0 ? (
-          shops.map((shop) => (
-            <Card key={shop.id}> 
-              <CardHeader className="space-y-4 p-6">
-                <Avatar className="w-12 h-12">
-                  <AvatarImage src={shop.photo.pc.m} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <CardTitle>{shop.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{shop.address || "住所情報なし"}</p>
-                <p>{shop.genre?.name || "ジャンル情報なし"}</p>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <p>店舗が見つかりません</p>
-        )}
-      </div>
     </div>
   );
 }
