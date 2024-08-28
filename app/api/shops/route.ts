@@ -34,17 +34,22 @@ export async function GET(request: Request) {
     if (!key) {
       throw new APIError(500, "API key is not set");
     }
- 
+    
     const query = new URLSearchParams({
       key,
-      count:"15",
+      count: "15",
       format: "json",
       large_area: searchParams.get("large_area") || "Z098",
     });
- 
+
     const keyword = searchParams.get("keyword");
+    const party_capacity = searchParams.get("party_capacity");
+    const budget = searchParams.get("budget");
+
     if (keyword) query.set("keyword", keyword);
- 
+    if (party_capacity) query.set("party_capacity", party_capacity);
+    if (budget) query.set("budget", budget);
+
     const url = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${query.toString()}`;
     const data = await fetchHotpepperData(url);
     return NextResponse.json(data);

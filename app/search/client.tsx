@@ -9,9 +9,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-async function fetchShops(keyword?: string): Promise<Shop[]> {
+async function fetchShops(keyword?: string, party_capacity?: string, budget?: string): Promise<Shop[]> {
   const query = new URLSearchParams();
   if (keyword) query.set("keyword", keyword);
+  if (party_capacity) query.set("party_capacity", party_capacity);
+  if (budget) query.set("budget", budget);
 
   try {
     const res = await fetch(`/api/shops?${query.toString()}`);
@@ -29,20 +31,29 @@ async function fetchShops(keyword?: string): Promise<Shop[]> {
 
 const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
   const [keyword, setKeyword] = useState("");
+  const [partyCapacity, setPartyCapacity] = useState("");
+  const [budget, setBudget] = useState("");
   const [shops, setShops] = useState<Shop[]>(initialShops);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const keywordParam = params.get("keyword");
-    if (keywordParam) {
-      setKeyword(keywordParam);
-      fetchShops(keywordParam).then(data => setShops(data));
+    const partyCapacityParam = params.get("people");
+    const budgetParam = params.get("budget");
+    const addressParam = params.get("location");
+
+    if (keywordParam || partyCapacityParam || budgetParam||addressParam) {
+      setKeyword(keywordParam || "");
+      setPartyCapacity(partyCapacityParam || "");
+      setBudget(budgetParam || "");
+      //setaddress(addressParam || "");
+      fetchShops(keywordParam || "", partyCapacityParam || "", budgetParam || "").then(data => setShops(data));
     }
   }, []);
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
-    const data = await fetchShops(keyword);
+    const data = await fetchShops(keyword, partyCapacity, budget);
     setShops(data);
   };
 
@@ -52,16 +63,16 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
         <ThemeToggle />
       </div>
       <form onSubmit={handleSearch} className="flex items-center space-x-4 mb-8">
-        <Input
-          type="search"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="検索..."
-          className="max-w-sm w-full"
-        />
-        <Button type="submit">
-          検索
-        </Button>
+        <div className="flex items-center space-x-4">
+          <Button type="button">ブックマーク</Button>
+          <Input
+            type="search"
+            name="keyword"
+            placeholder="検索..."
+            className="max-w-sm w-full"
+          />
+          <Button type="submit">検索</Button>
+        </div>
       </form>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
         {shops.length > 0 ? (
