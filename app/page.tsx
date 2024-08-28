@@ -13,8 +13,6 @@ import { LoginButton, LogoutButton } from "./components/buttons";
 export default function GourmetsSearch() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
 
   const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,8 +42,6 @@ export default function GourmetsSearch() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      {user ? <div>Logged in</div> : <div>Not logged in</div>}
-      {user ? <LogoutButton /> : <LoginButton />}
       <form
         onSubmit={handleSearchSubmit}
         className="flex flex-col items-center space-y-4 mb-8"
@@ -62,7 +58,7 @@ export default function GourmetsSearch() {
         </div>
         <div className="flex items-center space-x-4">
           <label className="flex items-center space-x-2">
-          <span>人数:</span>
+            <span>人数:</span>
             <Input
               type="text"
               name="people"
@@ -90,7 +86,6 @@ export default function GourmetsSearch() {
               <option value="B012">15001～20000円</option>
               <option value="B013">20001～30000円</option>
               <option value="B014">30001円～</option>
-
             </select>
           </label>
           <label className="flex items-center space-x-2">
