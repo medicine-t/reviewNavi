@@ -15,7 +15,7 @@ export default function SignIn({ callback }: Props) {
         type="submit"
         className="bg-gray-700 text-gray-100 p-2 rounded-md"
       >
-        Signin with GitHub
+        サインイン with GitHub
       </button>
     </form>
   );
