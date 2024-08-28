@@ -4,39 +4,48 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
- 
- 
+import SignIn from "./components/sign-in";
+import SignOut from "./components/sign-out";
+import { auth } from "@/auth";
+import Link from "next/link";
+
 async function fetchShops(keyword?: string): Promise<Shop[]> {
   const query = new URLSearchParams();
   if (keyword) query.set("keyword", keyword);
- 
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/shops?${query.toString()}`);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/api/shops?${query.toString()}`,
+    );
     if (!res.ok) {
       console.error(`Failed to fetch shops: ${res.status} ${res.statusText}`);
       return [];
     }
     return await res.json();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("Fetch error:", errorMessage);
     return [];
   }
 }
- 
- 
+
 export default async function GourmetsPage({
   searchParams,
 }: {
   searchParams: { keyword?: string };
 }) {
   const shops = await fetchShops(searchParams.keyword);
- 
+
+  const isSignedIn = (await auth()) !== null;
+  console.log(isSignedIn);
+
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
+      <div>{isSignedIn ? <SignOut /> : <SignIn callback="/" />}</div>
       <form className="flex items-center space-x-4 mb-8">
         <Input
           type="search"
@@ -47,10 +56,10 @@ export default async function GourmetsPage({
         />
         <Button type="submit">検索</Button>
       </form>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full"> 
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
         {shops.length > 0 ? (
           shops.map((shop) => (
-            <Card key={shop.id}> 
+            <Card key={shop.id}>
               <CardHeader className="space-y-4 p-6">
                 <Avatar className="w-12 h-12">
                   <AvatarImage src={shop.photo.pc.m} />
