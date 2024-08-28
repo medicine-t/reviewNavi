@@ -9,5 +9,5 @@ type Props = {
 
 export default async function SignInOutButton({ callback }: Props) {
   const isSignedIn = (await auth()) != null;
-  return isSignedIn ? <SignOut /> : <SignIn callback={"/"} />;
+  return isSignedIn ? <SignOut /> : <SignIn callback={callback ?? "/"} />;
 }
