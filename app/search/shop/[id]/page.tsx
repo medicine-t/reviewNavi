@@ -26,7 +26,10 @@ export default function GourmetsSearch() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <form onSubmit={handleSearchSubmit} className="flex items-center space-x-4 mb-8">
+      <form
+        onSubmit={handleSearchSubmit}
+        className="flex items-center space-x-4 mb-8"
+      >
         <Input
           type="search"
           name="keyword"

@@ -21,7 +21,8 @@ async function fetchShops(keyword?: string): Promise<Shop[]> {
     }
     return await res.json();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("Fetch error:", errorMessage);
     return [];
   }
@@ -36,7 +37,7 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
     const keywordParam = params.get("keyword");
     if (keywordParam) {
       setKeyword(keywordParam);
-      fetchShops(keywordParam).then(data => setShops(data));
+      fetchShops(keywordParam).then((data) => setShops(data));
     }
   }, []);
 
@@ -51,7 +52,10 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <form onSubmit={handleSearch} className="flex items-center space-x-4 mb-8">
+      <form
+        onSubmit={handleSearch}
+        className="flex items-center space-x-4 mb-8"
+      >
         <Input
           type="search"
           value={keyword}
@@ -59,9 +63,7 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
           placeholder="検索..."
           className="max-w-sm w-full"
         />
-        <Button type="submit">
-          検索
-        </Button>
+        <Button type="submit">検索</Button>
       </form>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
         {shops.length > 0 ? (
