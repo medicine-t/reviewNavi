@@ -8,7 +8,6 @@ interface Params {
 }
 
 const ShopDetail = ({ shop }: Params) => {
-  // 駐車場の情報を処理する関数
   const getParkingInfo = (parking: string) => {
     return parking.includes("なし") ? "なし" : parking.includes("あり") ? "あり" : "情報なし";
   };
