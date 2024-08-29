@@ -15,6 +15,7 @@ import { TemplateCardProps } from "./components/TemplateCard";
 import kaisyoku from "@/public/assets/kaisyoku.webp";
 import celebration from "@/public/assets/celebration.webp";
 import enkai from "@/public/assets/enkai.webp";
+import ListRecentReviews from "./review/components/listRecentReviews";
 
 const cardsPropertys: TemplateCardProps[] = [
   {
@@ -139,7 +140,7 @@ export default function GourmetsSearch() {
           </label>
         </div>
       </form>
-      <div className="p-5 flex">
+      <div className="p-5 pt-10 flex">
         {cardsPropertys.map((card, index) => {
           return (
             <PresetCard
@@ -151,6 +152,10 @@ export default function GourmetsSearch() {
             />
           );
         })}
+      </div>
+      <div className="p-5 flex flex-col">
+        <h2 className="flex text-2xl font-bold mb-4">最近のレビュー</h2>
+        <ListRecentReviews />
       </div>
     </div>
   );

@@ -10,22 +10,38 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const shopId = searchParams.get("shopId");
   if (!shopId) {
-    return NextResponse.json({ message: "No shop ID found" }, { status: 400 });
-  }
-  const reviews = await prisma.reviewItems.findMany({
-    where: {
-      storeId: shopId,
-    },
-    include: {
-      writer: {
-        select: {
-          name: true,
+    // shopIdがなかったら、Recentを返す
+    const recentReviews = await prisma.reviewItems.findMany({
+      take: 5,
+      orderBy: {
+        reviewId: "desc",
+      },
+      include: {
+        writer: {
+          select: {
+            name: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return NextResponse.json(reviews);
+    return NextResponse.json(recentReviews);
+  } else {
+    const reviews = await prisma.reviewItems.findMany({
+      where: {
+        storeId: shopId,
+      },
+      include: {
+        writer: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(reviews);
+  }
 }
 
 export const POST = auth(async function POST(req) {
