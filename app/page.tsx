@@ -1,20 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { FormEvent } from "react";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { LoginButton, LogoutButton } from "./components/buttons";
 
 import PresetCard from "./components/TemplateCard";
 import { TemplateCardProps } from "./components/TemplateCard";
 import kaisyoku from "@/public/assets/kaisyoku.webp";
 import celebration from "@/public/assets/celebration.webp";
 import enkai from "@/public/assets/enkai.webp";
+import ListRecentReviews from "./review/components/listRecentReviews";
 
 const cardsPropertys: TemplateCardProps[] = [
   {
@@ -139,7 +136,7 @@ export default function GourmetsSearch() {
           </label>
         </div>
       </form>
-      <div className="p-5 flex">
+      <div className="p-5 pt-10 flex">
         {cardsPropertys.map((card, index) => {
           return (
             <PresetCard
@@ -151,6 +148,10 @@ export default function GourmetsSearch() {
             />
           );
         })}
+      </div>
+      <div className="p-5 flex flex-col">
+        <h2 className="flex text-2xl font-bold mb-4">最近のレビュー</h2>
+        <ListRecentReviews />
       </div>
     </div>
   );
