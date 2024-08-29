@@ -1,49 +1,92 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { Shop } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Params {
   shop: Shop;
 }
 
 const ShopDetail = ({ shop }: Params) => {
+  const pathname = usePathname(); // 現在のパスを取得
+
   const getParkingInfo = (parking: string) => {
-    return parking.includes("なし") ? "なし" : parking.includes("あり") ? "あり" : "情報なし";
-  };
-  const getPrivateInfo = (private_room: string) => {
-    return private_room.includes("なし") ? "なし" : private_room.includes("あり") ? "あり" : "情報なし";
+    if (parking.includes("なし")) return { text: "駐車場なし", variant: "secondary" };
+    if (parking.includes("あり")) return { text: "駐車場あり", variant: "default" };
+    return { text: "情報なし", variant: "outline" };
   };
 
+  const getPrivateInfo = (private_room: string) => {
+    if (private_room.includes("なし")) return { text: "個室なし", variant: "secondary" };
+    if (private_room.includes("あり")) return { text: "個室あり", variant: "default" };
+    return { text: "情報なし", variant: "outline" };
+  };
+
+  const getSmokingInfo = (non_smoking: string) => {
+    if (non_smoking === "全面禁煙") return { text: "全面禁煙", variant: "default" };
+    if (non_smoking === "一部禁煙") return { text: "一部禁煙", variant: "secondary" };
+    if (non_smoking === "禁煙席なし") return { text: "禁煙席なし", variant: "destructive" };
+    return { text: "情報なし", variant: "outline" };
+  };
+
+  const parkingStatus = getParkingInfo(shop.parking);
+  const privateRoomStatus = getPrivateInfo(shop.private_room);
+  const smokingStatus = getSmokingInfo(shop.non_smoking);
+
   return (
-    <div className="p-6">
+    <div className="p-2">
       <div className="flex">
         <div className="w-1/2">
           <Image
             className="w-full h-auto object-cover rounded-lg"
             src={shop.photo.pc.l}
-            width = {400}
-            height = {400}
+            width={100}
+            height={100}
             alt="Shop Image"
           />
         </div>
         <div className="ml-6 w-1/2">
           <h1 className="text-3xl font-bold mb-4">{shop.name}</h1>
-          <p className="text-lg mb-2">ジャンル: {shop.genre?.name ?? "情報なし"}</p>
-          <p className="text-lg mb-2">駐車場: {getParkingInfo(shop.parking)}</p>
-          <p className="text-lg mb-2">禁煙: {shop.non_smoking ? shop.non_smoking : "情報なし"}</p>
-          <p className="text-lg mb-2">個室: {getPrivateInfo(shop.private_room)}</p>
+          <p className="text-lg mb-3">ジャンル: {shop.genre?.name ?? "情報なし"}</p>
+          <div className="flex space-x-2 mb-3">
+            <Badge className="px-4 py-2 text-lg" variant={parkingStatus.variant}>
+              {parkingStatus.text}
+            </Badge>
+            <Badge className="px-4 py-2 text-lg" variant={smokingStatus.variant}>
+              {smokingStatus.text}
+            </Badge>
+            <Badge className="px-4 py-2 text-lg" variant={privateRoomStatus.variant}>
+              {privateRoomStatus.text}
+            </Badge>
+          </div>
+
+          <p className="text-lg mb-2">住所: {shop.address}</p>
+          <div className="flex space-x-2 mb-3">
+            <Link href={`https://www.hotpepper.jp/str${shop.id}`} target="_blank" rel="noopener noreferrer">
+              <Button type="button" className="px-12 py-8 text-lg font-bold">予約・もっと詳しく!</Button>
+            </Link>
+
+            <Link href={`${pathname}#shop-review`} scroll={false} rel="noopener noreferrer">
+              <Button type="button" className="px-12 py-8 text-lg font-bold">レビュー</Button>
+            </Link>
+          </div>
+
         </div>
       </div>
       <div className="mt-8">
-        <p className="text-lg mb-2">住所: {shop.address}</p>
         <p className="text-lg mb-2">営業時間: {shop.open}</p>
         <p className="text-lg">定休日: {shop.close}</p>
       </div>
+      <div id="shop-review">
+        <p>レビュー</p>
+      </div>
     </div>
   );
-  
 };
 
 export default ShopDetail;

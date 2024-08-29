@@ -30,14 +30,11 @@ const Page = async ({ params: { id } }: Params) => {
 
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
+    <div className="flex flex-col items-center justify-start min-h-screen pt-2 px-8 md:px-12 lg:px-16">
       {shop ? (
         <>
           <ShopDetail shop={shop} />
           <div className="flex items-center space-x-4 mb-8">
-          <Link href={`https://www.hotpepper.jp/str${shop.id}`} target="_blank" rel="noopener noreferrer">
-              <Button type="button">予約</Button>
-            </Link>
           </div>
         </>
       ) : (
