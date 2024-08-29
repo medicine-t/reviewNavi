@@ -10,6 +10,45 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { LoginButton, LogoutButton } from "./components/buttons";
 
+import PresetCard from "./components/TemplateCard";
+import { TemplateCardProps } from "./components/TemplateCard";
+import kaisyoku from "@/public/assets/kaisyoku.webp";
+import celebration from "@/public/assets/celebration.webp";
+import enkai from "@/public/assets/enkai.webp";
+
+const cardsPropertys: TemplateCardProps[] = [
+  {
+    title: "会食",
+    image: kaisyoku,
+    query: {
+      party_capacity: 4,
+      budget: "B003,B002", // (5000,7000]
+      card: 1,
+      small_area: "X717",
+    },
+  },
+  {
+    title: "お祝い",
+    image: celebration,
+    query: {
+      party_capacity: 4,
+      budget: "B002", // (2000,3000]
+      card: 1,
+      small_area: "X717",
+    },
+  },
+  {
+    title: "宴会",
+    image: enkai,
+    query: {
+      party_capacity: 20,
+      budget: "B002", // (10001,15000]
+      card: 1,
+      small_area: "X717",
+    },
+  },
+];
+
 export default function GourmetsSearch() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
@@ -20,14 +59,17 @@ export default function GourmetsSearch() {
     const keyword = formData.get("keyword")?.toString().trim();
     const people = formData.get("people")?.toString().trim();
     const budget = formData.get("budget")?.toString().trim();
-    const location = formData.get("location")?.toString().trim();
+    const location =
+      formData.get("location")?.toString().trim() === "新都心"
+        ? "X717"
+        : undefined;
 
     const queryParams = new URLSearchParams();
 
     if (keyword) queryParams.append("keyword", keyword);
-    if (people) queryParams.append("people", people);
+    if (people) queryParams.append("party_capacity", people);
     if (budget) queryParams.append("budget", budget);
-    if (location) queryParams.append("location", location);
+    if (location) queryParams.append("small_area", location);
 
     if (keyword || people || budget || location) {
       setSearchKeyword(keyword || "");
@@ -100,6 +142,19 @@ export default function GourmetsSearch() {
           </label>
         </div>
       </form>
+      <div className="p-5 flex">
+        {cardsPropertys.map((card, index) => {
+          return (
+            <PresetCard
+              key={index}
+              title={card.title}
+              image={card.image}
+              query={card.query}
+              className="flex m-2"
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
