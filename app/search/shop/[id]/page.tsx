@@ -31,9 +31,6 @@ const Page = async ({ params: { id } }: Params) => {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
       {shop ? (
         <>
           <ShopDetail shop={shop} />
