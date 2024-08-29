@@ -1,16 +1,23 @@
-import { NextResponse } from "next/server";
- 
+import { HotPepperGourmetSearchQuery } from "@/types";
+import { NextRequest, NextResponse } from "next/server";
+
 class APIError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
     super(message);
     this.name = "APIError";
   }
 }
- 
+
 async function fetchHotpepperData(url: string): Promise<any> {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new APIError(response.status, `API request failed: ${response.statusText}`);
+    throw new APIError(
+      response.status,
+      `API request failed: ${response.statusText}`,
+    );
   }
   const data = await response.json();
   if (!data.results?.shop) {
@@ -18,37 +25,37 @@ async function fetchHotpepperData(url: string): Promise<any> {
   }
   return data.results.shop;
 }
- 
+
 function handleError(error: unknown): NextResponse {
   console.error("Error:", error);
   if (error instanceof APIError) {
-    return NextResponse.json({ error: error.message }, { status: error.status });
+    return NextResponse.json(
+      { error: error.message },
+      { status: error.status },
+    );
   }
-  return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
+  return NextResponse.json(
+    { error: "An unexpected error occurred" },
+    { status: 500 },
+  );
 }
- 
-export async function GET(request: Request) {
+
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const key = process.env.HOTPEPPER_API_KEY;
     if (!key) {
       throw new APIError(500, "API key is not set");
     }
-    
-    const query = new URLSearchParams({
-      key,
-      count: "15",
+
+    const searchQuery = searchParams.entries();
+    let hotpepperQuery: HotPepperGourmetSearchQuery & { key: string } = {
+      key: key,
+      ...Object.fromEntries(searchQuery),
       format: "json",
-      large_area: searchParams.get("large_area") || "Z098",
-    });
+    };
 
-    const keyword = searchParams.get("keyword");
-    const party_capacity = searchParams.get("party_capacity");
-    const budget = searchParams.get("budget");
-
-    if (keyword) query.set("keyword", keyword);
-    if (party_capacity) query.set("party_capacity", party_capacity);
-    if (budget) query.set("budget", budget);
+    const query = new URLSearchParams(Object.entries(hotpepperQuery));
 
     const url = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${query.toString()}`;
     const data = await fetchHotpepperData(url);
