@@ -49,9 +49,7 @@ const GourmetsClient = () => {
     const keyword = formData.get("keyword")?.toString().trim() ?? "";
     let query = hotpepperQuery;
     if (keyword) query.keyword = keyword;
-    console.log(query);
     const data = await fetchShops(query);
-    console.log(data);
     setShops(data);
     const urlSearchParams = new URLSearchParams(Object.entries(query));
     router.push(`/search?${urlSearchParams.toString()}`);
