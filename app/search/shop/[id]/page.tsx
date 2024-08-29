@@ -1,42 +1,50 @@
-"use client";
-
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { Shop } from "@/types";
+import ShopDetail from "./shop-detail";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FormEvent } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-export default function GourmetsSearch() {
-  const [searchKeyword, setSearchKeyword] = useState("");
-
-  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const keyword = formData.get("keyword")?.toString().trim();
-    if (keyword) {
-      setSearchKeyword(keyword);
-    } else {
-      setSearchKeyword("");
+async function fetchShopById(shopid: string): Promise<Shop | null> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/shops?id=${shopid}`);
+    if (!res.ok) {
+      console.error(`Failed to fetch shop: ${res.status} ${res.statusText}`);
+      return null;
     }
-  };
+    const shops = await res.json()
+    return shops[0];
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Fetch error:", errorMessage);
+    return null;
+  }
+}
+
+interface Params {
+  params: { id: string };
+}
+
+const Page = async ({ params: { id } }: Params) => {
+  const shop = await fetchShopById(id);
+
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <form onSubmit={handleSearchSubmit} className="flex items-center space-x-4 mb-8">
-        <Input
-          type="search"
-          name="keyword"
-          placeholder="検索..."
-          className="max-w-sm w-full"
-        />
-        <Link href={`/search?keyword=${encodeURIComponent(searchKeyword)}`}>
-          <Button type="submit">検索</Button>
-        </Link>
-      </form>
+      {shop ? (
+        <>
+          <ShopDetail shop={shop} />
+          <div className="flex items-center space-x-4 mb-8">
+          <Link href={`https://www.hotpepper.jp/str${shop.id}`} target="_blank" rel="noopener noreferrer">
+              <Button type="button">予約</Button>
+            </Link>
+          </div>
+        </>
+      ) : (
+        <p>ショップ情報が見つかりませんでした。</p>
+      )}
     </div>
   );
-}
+};
+
+export default Page;
