@@ -30,7 +30,7 @@ const ShopDetail = ({ shop }: Params) => {
         </div>
         <div className="ml-6 w-1/2">
           <h1 className="text-3xl font-bold mb-4">{shop.name}</h1>
-          <p className="text-lg mb-2">ジャンル: {shop.genre?.name || "情報なし"}</p>
+          <p className="text-lg mb-2">ジャンル: {shop.genre?.name ?? "情報なし"}</p>
           <p className="text-lg mb-2">駐車場: {getParkingInfo(shop.parking)}</p>
           <p className="text-lg mb-2">禁煙: {shop.non_smoking ? shop.non_smoking : "情報なし"}</p>
           <p className="text-lg mb-2">個室: {getPrivateInfo(shop.private_room)}</p>
