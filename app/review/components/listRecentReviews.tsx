@@ -1,21 +1,38 @@
+import React, { useState, useEffect } from "react";
 import ReviewItem from "./reviewItem";
 
-export default async function ListRecentReviews() {
-  const reviewResponse = await (
-    await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/reviews`, {
-      cache: "no-store",
-    })
-  ).json();
-  const reviews = reviewResponse as {
-    reviewId: string;
-    storeId: string;
-    reviewComment: string;
-    evaluation: number;
-    writerId: string;
-    writer: {
-      name: string;
-    };
-  }[];
+export default function ListRecentReviews() {
+  const [reviews, setReviews] = useState<
+    {
+      reviewId: string;
+      storeId: string;
+      reviewComment: string;
+      evaluation: number;
+      writerId: string;
+      writer: {
+        name: string;
+      };
+    }[]
+  >([]);
+
+  useEffect(() => {
+    async function fetchReviews() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_HOST}/api/reviews`,
+          {
+            cache: "no-store",
+          },
+        );
+        const reviewResponse = await response.json();
+        setReviews(reviewResponse);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    }
+
+    fetchReviews();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -25,6 +42,7 @@ export default async function ListRecentReviews() {
           reviewUserName={review.writer.name}
           reviewComment={review.reviewComment}
           evaluation={review.evaluation}
+          storeId={review.storeId}
         />
       ))}
     </div>

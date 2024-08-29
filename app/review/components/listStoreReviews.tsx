@@ -27,6 +27,7 @@ export default async function ListStoreReviews({ shopId }: { shopId: string }) {
           reviewUserName={review.writer.name}
           reviewComment={review.reviewComment}
           evaluation={review.evaluation}
+          storeId={review.storeId}
         />
       ))}
     </>

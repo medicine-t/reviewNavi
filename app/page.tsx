@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { FormEvent } from "react";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { LoginButton, LogoutButton } from "./components/buttons";
 
 import PresetCard from "./components/TemplateCard";
 import { TemplateCardProps } from "./components/TemplateCard";
