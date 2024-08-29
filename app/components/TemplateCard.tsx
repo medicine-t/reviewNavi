@@ -6,27 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { HotPepperGourmetSearchQuery } from "@/types";
 import Image, { StaticImageData } from "next/image";
 
 import Link from "next/link";
 
-type SeachParams = {
-  keyword?: string;
-  people?: string;
-  budget?: string;
-  location?: string;
-  acceptCreditCard?: boolean;
-};
-
-const query = {
-  people: "4",
-  budget: "B004", // (5000,7000]
-};
-
 export type TemplateCardProps = {
   title: string;
   image: StaticImageData;
-  query: SeachParams;
+  query: HotPepperGourmetSearchQuery;
   className?: string;
 };
 
@@ -38,7 +26,12 @@ export default function PresetCard({
 }: TemplateCardProps) {
   return (
     <div className={`w-[350px] ${className}`}>
-      <Link href={{ pathname: "/search", query: query }}>
+      <Link
+        href={{
+          pathname: "/search",
+          query: new URLSearchParams(Object.entries(query)).toString(),
+        }}
+      >
         <Card className="">
           <CardHeader>
             <CardTitle>{title}</CardTitle>

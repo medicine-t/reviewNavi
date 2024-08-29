@@ -9,7 +9,7 @@ const cardsPropertys: TemplateCardProps[] = [
     title: "会食",
     image: kaisyoku,
     query: {
-      people: "4",
+      party_capacity: 4,
       budget: "B004", // (5000,7000]
     },
   },
@@ -17,7 +17,7 @@ const cardsPropertys: TemplateCardProps[] = [
     title: "お祝い",
     image: celebration,
     query: {
-      people: "8",
+      party_capacity: 4,
       budget: "B002", // (2000,3000]
     },
   },
@@ -25,7 +25,7 @@ const cardsPropertys: TemplateCardProps[] = [
     title: "宴会",
     image: enkai,
     query: {
-      people: "20",
+      party_capacity: 20,
       budget: "B002", // (10001,15000]
     },
   },
