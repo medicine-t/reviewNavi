@@ -1,68 +1,78 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Shop } from "@/types";
+import { HotPepperGourmetSearchQuery, Shop } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { useRouter, useSearchParams } from "next/navigation";
 
-async function fetchShops(keyword?: string): Promise<Shop[]> {
-  const query = new URLSearchParams();
-  if (keyword) query.set("keyword", keyword);
-
+async function fetchShops(query: HotPepperGourmetSearchQuery): Promise<Shop[]> {
   try {
-    const res = await fetch(`/api/shops?${query.toString()}`);
+    const urlSearchParams = new URLSearchParams(Object.entries(query));
+    const res = await fetch(`/api/shops?${urlSearchParams.toString()}`);
     if (!res.ok) {
       console.error(`Failed to fetch shops: ${res.status} ${res.statusText}`);
       return [];
     }
     return await res.json();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("Fetch error:", errorMessage);
     return [];
   }
 }
 
-const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
-  const [keyword, setKeyword] = useState("");
-  const [shops, setShops] = useState<Shop[]>(initialShops);
+const GourmetsClient = () => {
+  const router = useRouter();
+  const [shops, setShops] = useState<Shop[]>([]);
+  const params = useSearchParams();
+  const searchQuery = params.entries();
+  const hotpepperQuery: HotPepperGourmetSearchQuery = {
+    ...Object.fromEntries(searchQuery),
+  };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const keywordParam = params.get("keyword");
-    if (keywordParam) {
-      setKeyword(keywordParam);
-      fetchShops(keywordParam).then(data => setShops(data));
+    async function fetchshops(): Promise<void> {
+      const data = await fetchShops(hotpepperQuery);
+      setShops(data);
     }
+    fetchshops();
   }, []);
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
-    const data = await fetchShops(keyword);
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const keyword = formData.get("keyword")?.toString().trim() ?? "";
+    let query = hotpepperQuery;
+    if (keyword) query.keyword = keyword;
+    const data = await fetchShops(query);
     setShops(data);
+    const urlSearchParams = new URLSearchParams(Object.entries(query));
+    router.push(`/search?${urlSearchParams.toString()}`);
   };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <form onSubmit={handleSearch} className="flex items-center space-x-4 mb-8">
-        <Input
-          type="search"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="検索..."
-          className="max-w-sm w-full"
-        />
-        <Button type="submit">
-          検索
-        </Button>
+      <form
+        onSubmit={handleSearch}
+        className="flex items-center space-x-4 mb-8"
+      >
+        <div className="flex items-center space-x-4">
+          <Button type="button">ブックマーク</Button>
+          <Input
+            type="search"
+            name="keyword"
+            placeholder="検索..."
+            className="max-w-sm w-full"
+          />
+          <Button type="submit">検索</Button>
+        </div>
       </form>
+      {/* <div>{JSON.stringify(shops)}</div> */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
         {shops.length > 0 ? (
           shops.map((shop) => (
