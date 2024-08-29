@@ -41,6 +41,7 @@ export default function ListRecentReviews() {
           key={index}
           reviewUserName={review.writer.name}
           reviewComment={review.reviewComment}
+          reviewId={review.reviewId}
           evaluation={review.evaluation}
           storeId={review.storeId}
         />
