@@ -13,22 +13,27 @@ interface Params {
   shop: Shop;
 }
 
+interface Info {
+  text: string,
+  variant : "secondary" | "default" | "outline" | "destructive" | null | undefined
+}
+
 const ShopDetail = ({ shop }: Params) => {
   const pathname = usePathname(); // 現在のパスを取得
 
-  const getParkingInfo = (parking: string) => {
+  const getParkingInfo = (parking: string) : Info => {
     if (parking.includes("なし")) return { text: "駐車場なし", variant: "secondary" };
     if (parking.includes("あり")) return { text: "駐車場あり", variant: "default" };
-    return { text: "情報なし", variant: "outline" };
+    return { text: "情報なし", variant: "outline"};
   };
 
-  const getPrivateInfo = (private_room: string) => {
+  const getPrivateInfo = (private_room: string) : Info => {
     if (private_room.includes("なし")) return { text: "個室なし", variant: "secondary" };
     if (private_room.includes("あり")) return { text: "個室あり", variant: "default" };
     return { text: "情報なし", variant: "outline" };
   };
 
-  const getSmokingInfo = (non_smoking: string) => {
+  const getSmokingInfo = (non_smoking: string) : Info => {
     if (non_smoking === "全面禁煙") return { text: "全面禁煙", variant: "default" };
     if (non_smoking === "一部禁煙") return { text: "一部禁煙", variant: "secondary" };
     if (non_smoking === "禁煙席なし") return { text: "禁煙席なし", variant: "destructive" };
