@@ -1,68 +1,66 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Shop } from "@/types";
+import { HotPepperGourmetSearchQuery, Shop } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { useRouter, useSearchParams } from "next/navigation";
 
-async function fetchShops(keyword?: string, party_capacity?: string, budget?: string): Promise<Shop[]> {
-  const query = new URLSearchParams();
-  if (keyword) query.set("keyword", keyword);
-  if (party_capacity) query.set("party_capacity", party_capacity);
-  if (budget) query.set("budget", budget);
-
+async function fetchShops(query: HotPepperGourmetSearchQuery): Promise<Shop[]> {
   try {
-    const res = await fetch(`/api/shops?${query.toString()}`);
+    const urlSearchParams = new URLSearchParams(Object.entries(query));
+    const res = await fetch(`/api/shops?${urlSearchParams.toString()}`);
     if (!res.ok) {
       console.error(`Failed to fetch shops: ${res.status} ${res.statusText}`);
       return [];
     }
     return await res.json();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("Fetch error:", errorMessage);
     return [];
   }
 }
 
-const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
-  const [keyword, setKeyword] = useState("");
-  const [partyCapacity, setPartyCapacity] = useState("");
-  const [budget, setBudget] = useState("");
-  const [shops, setShops] = useState<Shop[]>(initialShops);
+const GourmetsClient = () => {
+  const router = useRouter();
+  const [shops, setShops] = useState<Shop[]>([]);
+  const params = useSearchParams();
+  const searchQuery = params.entries();
+  const hotpepperQuery: HotPepperGourmetSearchQuery = {
+    ...Object.fromEntries(searchQuery),
+  };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const keywordParam = params.get("keyword");
-    const partyCapacityParam = params.get("people");
-    const budgetParam = params.get("budget");
-    const addressParam = params.get("location");
-
-    if (keywordParam || partyCapacityParam || budgetParam||addressParam) {
-      setKeyword(keywordParam || "");
-      setPartyCapacity(partyCapacityParam || "");
-      setBudget(budgetParam || "");
-      //setaddress(addressParam || "");
-      fetchShops(keywordParam || "", partyCapacityParam || "", budgetParam || "").then(data => setShops(data));
+    async function fetchshops(): Promise<void> {
+      const data = await fetchShops(hotpepperQuery);
+      setShops(data);
     }
+    fetchshops();
   }, []);
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
-    const data = await fetchShops(keyword, partyCapacity, budget);
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const keyword = formData.get("keyword")?.toString().trim() ?? "";
+    let query = hotpepperQuery;
+    if (keyword) query.keyword = keyword;
+    const data = await fetchShops(query);
     setShops(data);
+    const urlSearchParams = new URLSearchParams(Object.entries(query));
+    router.push(`/search?${urlSearchParams.toString()}`);
   };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <form onSubmit={handleSearch} className="flex items-center space-x-4 mb-8">
+      <form
+        onSubmit={handleSearch}
+        className="flex items-center space-x-4 mb-8"
+      >
         <div className="flex items-center space-x-4">
           <Button type="button">ブックマーク</Button>
           <Input
@@ -74,6 +72,7 @@ const GourmetsClient = ({ initialShops }: { initialShops: Shop[] }) => {
           <Button type="submit">検索</Button>
         </div>
       </form>
+      {/* <div>{JSON.stringify(shops)}</div> */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
         {shops.length > 0 ? (
           shops.map((shop) => (
