@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 async function fetchShops(query: HotPepperGourmetSearchQuery): Promise<Shop[]> {
   try {
@@ -27,6 +27,7 @@ async function fetchShops(query: HotPepperGourmetSearchQuery): Promise<Shop[]> {
 }
 
 const GourmetsClient = () => {
+  const router = useRouter();
   const [shops, setShops] = useState<Shop[]>([]);
   const params = useSearchParams();
   const searchQuery = params.entries();
@@ -46,15 +47,14 @@ const GourmetsClient = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const keyword = formData.get("keyword")?.toString().trim() ?? "";
-    const partyCapacity = formData.get("people")?.toString().trim() ?? "";
-    const budget = formData.get("budget")?.toString().trim() ?? "";
-    const data = await fetchShops({
-      keyword,
-      party_capacity: Number.parseInt(partyCapacity || "0"),
-      budget,
-    });
+    let query = hotpepperQuery;
+    if (keyword) query.keyword = keyword;
+    console.log(query);
+    const data = await fetchShops(query);
     console.log(data);
     setShops(data);
+    const urlSearchParams = new URLSearchParams(Object.entries(query));
+    router.push(`/search?${urlSearchParams.toString()}`);
   };
 
   return (
