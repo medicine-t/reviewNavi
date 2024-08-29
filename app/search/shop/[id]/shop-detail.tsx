@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Shop } from "@/types";
 
 interface Params {
@@ -19,9 +20,11 @@ const ShopDetail = ({ shop }: Params) => {
     <div className="p-6">
       <div className="flex">
         <div className="w-1/2">
-          <img
+          <Image
             className="w-full h-auto object-cover rounded-lg"
             src={shop.photo.pc.l}
+            width = {400}
+            height = {400}
             alt="Shop Image"
           />
         </div>
