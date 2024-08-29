@@ -1,15 +1,6 @@
 import { HotPepperGourmetSearchQuery } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-
-class APIError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = "APIError";
-  }
-}
+import APIError from "../lib/apiError";
 
 async function fetchHotpepperData(url: string): Promise<any> {
   const response = await fetch(url);
