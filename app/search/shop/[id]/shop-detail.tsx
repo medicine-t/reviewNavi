@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Params {
   shop: Shop;
@@ -45,8 +46,8 @@ const ShopDetail = ({ shop }: Params) => {
           <Image
             className="w-full h-auto object-cover rounded-lg"
             src={shop.photo.pc.l}
-            width={100}
-            height={100}
+            width={600}
+            height={600}
             alt="Shop Image"
           />
         </div>
@@ -78,12 +79,16 @@ const ShopDetail = ({ shop }: Params) => {
 
         </div>
       </div>
-      <div className="mt-8">
-        <p className="text-lg mb-2">営業時間: {shop.open}</p>
-        <p className="text-lg">定休日: {shop.close}</p>
-      </div>
-      <div id="shop-review">
-        <p>レビュー</p>
+      <div className="mt-8 space-y-4">
+        <Alert variant="default">
+          <AlertTitle>営業日</AlertTitle>
+          <AlertDescription>{shop.open}</AlertDescription>
+        </Alert>
+
+        <Alert variant="default">
+          <AlertTitle>定休日</AlertTitle>
+          <AlertDescription>{shop.close}</AlertDescription>
+        </Alert>
       </div>
     </div>
   );
