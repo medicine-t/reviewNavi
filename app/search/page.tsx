@@ -15,7 +15,7 @@ export default async function GourmetsPage() {
   // const initialShops = await fetchInitialShops();
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
       <GourmetsClient />
     </Suspense>
   );
