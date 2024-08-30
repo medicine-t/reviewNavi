@@ -14,7 +14,7 @@ interface Params {
 }
 
 
-export async function generateMetadataa({ params }: Params): Promise<Metadata>{
+export async function generateMetadata({ params }: Params): Promise<Metadata>{
   
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_HOST}/api/shops?id=${params.id}`
