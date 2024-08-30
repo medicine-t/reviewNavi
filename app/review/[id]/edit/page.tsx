@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getStoreName } from "../../components/reviewItem";
 
 const formSchema = z.object({
   body: z.string().min(1).max(2000),
@@ -43,6 +44,7 @@ export default function UpdateReview({ params }: { params: { id: string } }) {
       }
     | undefined
   >(undefined);
+  const [storeName, setStoreName] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchReviews() {
@@ -55,6 +57,8 @@ export default function UpdateReview({ params }: { params: { id: string } }) {
         );
         const reviewResponse = await response.json();
         setReviews(reviewResponse);
+        const storeName = await getStoreName(reviewResponse.storeId);
+        setStoreName(storeName);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -82,6 +86,7 @@ export default function UpdateReview({ params }: { params: { id: string } }) {
     });
     if (result.ok) {
       console.info("Review created");
+      alert("レビュー更新成功");
       // Routerで戻る
       router.back();
     } else {
@@ -89,9 +94,11 @@ export default function UpdateReview({ params }: { params: { id: string } }) {
     }
   }
   return (
-    <div className="w-[40rem]">
-      <Card className="p-5">
+    <div className="flex justify-center">
+      <Card className="p-5 w-[40rem]">
         <Form {...form}>
+          <h1 className="text-2xl font-bold">レビューを更新</h1>
+          <h2 className="text-lg font-bold">{storeName}に対するレビュー</h2>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}

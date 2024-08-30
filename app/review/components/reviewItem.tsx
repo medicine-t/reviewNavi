@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-async function getStoreName(id: string): Promise<string> {
+export async function getStoreName(id: string): Promise<string> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_HOST}/api/shops?id=${id}`,
     { cache: "no-cache" },
