@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shop } from "@/types";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ShopCard({ shop }: { shop: Shop }) {
@@ -9,10 +10,17 @@ export default function ShopCard({ shop }: { shop: Shop }) {
       <Link href={`/search/shop/${shop.id}`} key={shop.id}>
         <Card className="cursor-pointer">
           <CardHeader className="space-y-4 p-6">
-            <Avatar className="w-12 h-12">
+            {/* <Avatar className="w-12 h-12">
               <AvatarImage src={shop.photo.pc.m} />
               <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            </Avatar> */}
+            <Image
+              src={shop.photo.pc.m}
+              width={150}
+              height={150}
+              alt="Shop Image"
+              className="rounded-full"
+            />
             <CardTitle>{shop.name}</CardTitle>
           </CardHeader>
           <CardContent>
