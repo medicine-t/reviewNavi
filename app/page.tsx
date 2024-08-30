@@ -23,6 +23,7 @@ const cardsPropertys: TemplateCardProps[] = [
       card: 1,
       small_area: "X717",
     },
+    description: "４人~, 5000～7000円, カード利用可",
   },
   {
     title: "お祝い",
@@ -33,16 +34,18 @@ const cardsPropertys: TemplateCardProps[] = [
       card: 1,
       small_area: "X717",
     },
+    description: "４人~, 2000～3000円, カード利用可",
   },
   {
     title: "宴会",
     image: enkai,
     query: {
       party_capacity: 20,
-      budget: "B002", // (10001,15000]
+      budget: "B002", // (2000,3000]
       card: 1,
       small_area: "X717",
     },
+    description: "20人~, 2000～3000円, カード利用可",
   },
 ];
 
@@ -80,9 +83,9 @@ export default function GourmetsSearch() {
     <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
       <form
         onSubmit={handleSearchSubmit}
-        className="flex flex-col items-center space-y-4 mb-8"
+        className="flex flex-col space-y-4 mb-8"
       >
-        <div className="flex items-center space-x-4">
+        <div className="flex items-start space-x-4">
           <Button type="button">ブックマーク</Button>
           <Input
             type="search"
@@ -144,6 +147,7 @@ export default function GourmetsSearch() {
               title={card.title}
               image={card.image}
               query={card.query}
+              description={card.description ?? "　"}
               className="flex m-2"
             />
           );

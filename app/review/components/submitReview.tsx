@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 
 const formSchema = z.object({
   body: z.string().min(1).max(2000),
@@ -52,6 +52,7 @@ export default function SubmitReview({ shopId }: { shopId: string }) {
   return (
     <div className="w-[40rem]">
       <Card className="p-5">
+        <CardTitle>レビューを投稿する</CardTitle>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField

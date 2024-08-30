@@ -15,6 +15,7 @@ export type TemplateCardProps = {
   title: string;
   image: StaticImageData;
   query: HotPepperGourmetSearchQuery;
+  description?: string;
   className?: string;
 };
 
@@ -22,6 +23,7 @@ export default function PresetCard({
   title,
   image,
   query,
+  description,
   className,
 }: TemplateCardProps) {
   return (
@@ -35,7 +37,7 @@ export default function PresetCard({
         <Card className="">
           <CardHeader>
             <CardTitle>{title}</CardTitle>
-            {/* <CardDescription>Card Description</CardDescription> */}
+            <CardDescription>{description}</CardDescription>
           </CardHeader>
           <CardContent>
             <Image src={image} alt={"placeholder"} width={300} height={200} />
