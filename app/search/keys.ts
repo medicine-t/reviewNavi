@@ -85,11 +85,11 @@ export const KeyConvert = (key: (typeof QueryKeys)[number]) => {
     case "show":
       return "ライブ・ショーあり";
     case "equipment":
-      return "エンタメ設備あいｒ";
+      return "エンタメ設備あり";
     case "karaoke":
       return "カラオケ有り";
     case "band":
-      return "バンド演奏家";
+      return "バンド演奏可";
     case "tv":
       return "テレビ・プロジェクター";
     case "lunch":
