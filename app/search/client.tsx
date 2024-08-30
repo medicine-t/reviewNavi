@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { HotPepperGourmetSearchQuery, Shop } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ const GourmetsClient = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
+    <div className="flex flex-col items-center justify-start min-h-screen pt-24 px-8 md:px-12 lg:px-16">
       <form
         onSubmit={handleSearch}
         className="flex items-center space-x-4 mb-8"
@@ -73,9 +73,9 @@ const GourmetsClient = () => {
         </div>
       </form>
       {/* <div>{JSON.stringify(shops)}</div> */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
-        {shops.length > 0 ? (
-          shops.map((shop) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
+          {shops.map((shop) => (
             <Link href={`/search/shop/${shop.id}`} key={shop.id}>
               <Card className="cursor-pointer">
                 <CardHeader className="space-y-4 p-6">
@@ -91,11 +91,9 @@ const GourmetsClient = () => {
                 </CardContent>
               </Card>
             </Link>
-          ))
-        ) : (
-          <p>店舗が見つかりません</p>
-        )}
-      </div>
+          ))}
+        </div>
+      </Suspense>
     </div>
   );
 };

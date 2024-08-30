@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import ReviewItem from "./reviewItem";
+import { Shop } from "@/types";
+
+type Review = {
+  reviewId: string;
+  storeId: string;
+  reviewComment: string;
+  evaluation: number;
+  writerId: string;
+  writer: {
+    name: string;
+  };
+};
 
 export default function ListRecentReviews() {
-  const [reviews, setReviews] = useState<
-    {
-      reviewId: string;
-      storeId: string;
-      reviewComment: string;
-      evaluation: number;
-      writerId: string;
-      writer: {
-        name: string;
-      };
-    }[]
-  >([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  // const [storeNames, setStoreNames] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchReviews() {
@@ -26,6 +28,7 @@ export default function ListRecentReviews() {
         );
         const reviewResponse = await response.json();
         setReviews(reviewResponse);
+   
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -41,6 +44,7 @@ export default function ListRecentReviews() {
           key={index}
           reviewUserName={review.writer.name}
           reviewComment={review.reviewComment}
+          reviewId={review.reviewId}
           evaluation={review.evaluation}
           storeId={review.storeId}
         />

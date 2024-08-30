@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import ListStoreReviews from "@/app/review/components/listStoreReviews";
+import SubmitReview from "@/app/review/components/submitReview";
 
 async function fetchShopById(shopid: string): Promise<Shop | null> {
   try {
@@ -34,23 +35,15 @@ const Page = async ({ params: { id } }: Params) => {
   console.log("shopId", shop?.id);
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen pt-36 px-8 md:px-12 lg:px-16">
+    <div className="flex flex-col items-center justify-start min-h-screen pt-2 px-24 md:px-12 lg:px-16">
       {shop ? (
         <>
           <ShopDetail shop={shop} />
-          <div className="flex items-center space-x-4 mb-8">
-            <Link
-              href={`https://www.hotpepper.jp/str${shop.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button type="button">予約</Button>
-            </Link>
-          </div>
-          <div>
+          <div id="shop-review">
             レビュー一覧
             <ListStoreReviews shopId={shop.id} />
           </div>
+          <SubmitReview shopId={shop.id}/>
         </>
       ) : (
         <p>ショップ情報が見つかりませんでした。</p>
