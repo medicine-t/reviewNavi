@@ -13,22 +13,20 @@ interface Params {
   params: { id: string };
 }
 
-
-export async function generateMetadata({ params }: Params): Promise<Metadata>{
-  
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_HOST}/api/shops?id=${params.id}`
+    `${process.env.NEXT_PUBLIC_API_HOST}/api/shops?id=${params.id}`,
   );
   if (!res.ok) {
     console.error(`Failed to fetch shop: ${res.status} ${res.statusText}`);
     return {
-      title: ""
+      title: "",
     };
   }
   const shops = await res.json();
   console.log(shops.name);
-  return { 
-    title: shops.name
+  return {
+    title: shops.name,
   };
 }
 async function fetchShopById(shopid: string): Promise<Shop | null> {
@@ -58,11 +56,11 @@ const Page = async ({ params: { id } }: Params) => {
       {shop ? (
         <>
           <ShopDetail shop={shop} />
-          <div id="shop-review" className="pt-4 text-xl font-bold">
+          <div id="shop-review" className="pt-8 pb-2 text-xl font-bold">
             レビュー
             <ListStoreReviews shopId={shop.id} />
           </div>
-          <SubmitReview shopId={shop.id}/>
+          <SubmitReview shopId={shop.id} />
         </>
       ) : (
         <p>ショップ情報が見つかりませんでした。</p>

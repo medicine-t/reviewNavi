@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardTitle } from "@/components/ui/card";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   body: z.string().min(1).max(2000),
@@ -26,6 +27,7 @@ const formSchema = z.object({
 });
 
 export default function SubmitReview({ shopId }: { shopId: string }) {
+  const session = useSession();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,7 +86,14 @@ export default function SubmitReview({ shopId }: { shopId: string }) {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={session.status !== "authenticated"}>
+              Submit
+            </Button>
+            {session.status !== "authenticated" ? (
+              <p className="text-red-500">ログインが必要です。</p>
+            ) : (
+              <></>
+            )}
           </form>
         </Form>
       </Card>
