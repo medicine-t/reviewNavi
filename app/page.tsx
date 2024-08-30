@@ -88,7 +88,9 @@ export default function GourmetsSearch() {
         className="flex flex-col space-y-4 mb-8"
       >
         <div className="flex items-start space-x-4">
-          <Button type="button">ブックマーク</Button>
+          <Button type="button" disabled>
+            ブックマーク
+          </Button>
           <Input
             type="search"
             name="keyword"
