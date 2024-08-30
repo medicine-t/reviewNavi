@@ -46,6 +46,8 @@ export default function SubmitReview({ shopId }: { shopId: string }) {
       }),
     });
     if (result.ok) {
+      alert("レビュー投稿成功");
+      window.location.reload();
       console.info("Review created");
     } else {
       console.warn("Failed to create review");
