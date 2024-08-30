@@ -59,10 +59,10 @@ export default function GourmetsSearch() {
     const keyword = formData.get("keyword")?.toString().trim();
     const people = formData.get("people")?.toString().trim();
     const budget = formData.get("budget")?.toString().trim();
-    const location =
-      formData.get("location")?.toString().trim() === "新都心"
-        ? "X717"
-        : undefined;
+    const location = "X717";
+    // formData.get("location")?.toString().trim() === "新都心"
+    // ? "X717"
+    //   : undefined;
 
     const queryParams = new URLSearchParams();
 
@@ -99,11 +99,11 @@ export default function GourmetsSearch() {
           <label className="flex items-center space-x-2">
             <span>人数:</span>
             <Input
-              type="text"
+              type="number"
               name="people"
               placeholder="人数"
-              defaultValue="2"
-              className="max-w-xs w-10"
+              defaultValue={2}
+              className="max-w-xs w-[4rem]"
             />
           </label>
           <label className="flex items-center space-x-2">
@@ -111,6 +111,7 @@ export default function GourmetsSearch() {
             <select
               name="budget"
               className="max-w-xs w-30 border border-gray-300 rounded-md p-2 text-xs"
+              defaultValue={"B001"}
             >
               <option value="B009">~500円</option>
               <option value="B010">501～1000円</option>
@@ -135,6 +136,7 @@ export default function GourmetsSearch() {
               placeholder="場所"
               defaultValue="新都心"
               className="max-w-xs w-20"
+              disabled
             />
           </label>
         </div>
