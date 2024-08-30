@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Metadata } from "next";
+import MetadataNavi from "@/components/MetadataNavi";
 
 import PresetCard from "./components/TemplateCard";
 import { TemplateCardProps } from "./components/TemplateCard";
