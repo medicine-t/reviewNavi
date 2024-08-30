@@ -14,9 +14,5 @@ async function fetchInitialShops(): Promise<Shop[]> {
 export default async function GourmetsPage() {
   // const initialShops = await fetchInitialShops();
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <GourmetsClient />
-    </Suspense>
-  );
+  return <GourmetsClient />;
 }
