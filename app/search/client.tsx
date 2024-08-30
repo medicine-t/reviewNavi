@@ -72,7 +72,9 @@ const GourmetsClient = () => {
         className="flex items-center space-x-4 mb-8"
       >
         <div className="flex items-center space-x-4">
-          <Button type="button">ブックマーク</Button>
+          <Button type="button" disabled>
+            ブックマーク
+          </Button>
           <Input
             type="search"
             name="keyword"
