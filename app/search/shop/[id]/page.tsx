@@ -6,7 +6,31 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import ListStoreReviews from "@/app/review/components/listStoreReviews";
 import SubmitReview from "@/app/review/components/submitReview";
+import { Metadata } from "next";
+import getStoreName from "@/app/review/components/reviewItem";
 
+interface Params {
+  params: { id: string };
+}
+
+
+export async function generateMetadataa({ params }: Params): Promise<Metadata>{
+  
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_HOST}/api/shops?id=${params.id}`
+  );
+  if (!res.ok) {
+    console.error(`Failed to fetch shop: ${res.status} ${res.statusText}`);
+    return {
+      title: ""
+    };
+  }
+  const shops = await res.json();
+  console.log(shops.name);
+  return { 
+    title: shops.name
+  };
+}
 async function fetchShopById(shopid: string): Promise<Shop | null> {
   try {
     const res = await fetch(
@@ -26,21 +50,16 @@ async function fetchShopById(shopid: string): Promise<Shop | null> {
   }
 }
 
-interface Params {
-  params: { id: string };
-}
-
 const Page = async ({ params: { id } }: Params) => {
   const shop = await fetchShopById(id);
-  console.log("shopId", shop?.id);
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen pt-2 px-24 md:px-12 lg:px-16">
       {shop ? (
         <>
           <ShopDetail shop={shop} />
-          <div id="shop-review">
-            レビュー一覧
+          <div id="shop-review" className="pt-4 text-xl font-bold">
+            レビュー
             <ListStoreReviews shopId={shop.id} />
           </div>
           <SubmitReview shopId={shop.id}/>
