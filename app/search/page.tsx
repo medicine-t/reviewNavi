@@ -14,5 +14,9 @@ async function fetchInitialShops(): Promise<Shop[]> {
 export default async function GourmetsPage() {
   // const initialShops = await fetchInitialShops();
 
-  return <GourmetsClient />;
+  return (
+    <Suspense>
+      <GourmetsClient />
+    </Suspense>
+  );
 }

@@ -121,14 +121,18 @@ const GourmetsClient = () => {
         </>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 w-full">
-          {shops.map((shop: Shop | undefined, index) => {
-            return shop != undefined ? (
-              <ShopCard key={shop.id} shop={shop} />
-            ) : (
-              <ShopCardSkeleton key={`${index}`} />
-              // <div key={index}>loading...</div>
-            );
-          })}
+          {shops.length > 0 ? (
+            shops.map((shop: Shop | undefined, index) => {
+              return shop != undefined ? (
+                <ShopCard key={shop.id} shop={shop} />
+              ) : (
+                <ShopCardSkeleton key={`${index}`} />
+                // <div key={index}>loading...</div>
+              );
+            })
+          ) : (
+            <div className="w-80">No Stores found</div>
+          )}
         </div>
       </div>
     </div>
